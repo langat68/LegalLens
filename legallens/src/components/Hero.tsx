@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Upload, FileText, Sparkles, Loader2, CheckCircle, AlertCircle, ArrowUp, Shield, Zap, MessageCircle, Scale, BookOpen, Eye } from 'lucide-react';
-import "./Hero.scss";
+import "../components/Hero.scss";
 
 interface AnalysisResult {
     summary: string;
