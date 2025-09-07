@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import "../components/Hero.scss";
 import {
     Upload,
     FileText,
@@ -7,13 +8,16 @@ import {
     CheckCircle,
     AlertCircle,
     Scale,
-    BookOpen,
-    Eye,
+
     Shield,
 
-    MessageCircle,
+    Gavel,
+    Award,
+    Users,
+    Clock,
+    TrendingUp,
+    Lock
 } from "lucide-react";
-import "../components/Hero.scss";
 
 interface AnalysisResult {
     summary: string;
@@ -70,86 +74,116 @@ const HeroSection: React.FC = () => {
         if (fileInputRef.current) fileInputRef.current.value = "";
     };
 
-    // Show results if available
+    // Results view
     if (results || error) {
         return (
             <div className="hero-results">
                 <div className="hero-background" />
+
+                {/* Professional floating icons */}
                 <div className="hero-icons-floating">
+                    <Gavel className="icon-gavel" />
                     <Scale className="icon-scale" />
-                    <FileText className="icon-file" />
-                    <BookOpen className="icon-book" />
+                    <Shield className="icon-shield" />
+                    <Award className="icon-award" />
+                    <Lock className="icon-lock" />
+                    <TrendingUp className="icon-trending" />
                 </div>
 
                 <div className="hero-container">
+                    {/* Brand Header */}
                     <div className="hero-header">
-                        <div className="logo-wrapper">
-                            <div className="logo-icon">
-                                <Eye />
+                        <div className="brand-wrapper">
+                            <div className="brand-icon">
+                                <Gavel />
                             </div>
-                            <h1 className="brand">LegalLens</h1>
-                        </div>
-
-                        <div className="status">
-                            {error ? <AlertCircle className="icon-error" /> : <CheckCircle className="icon-success" />}
-                            <h2>{error ? "Oops! Something went wrong" : "✨ Analysis Complete!"}</h2>
+                            <div className="brand-info">
+                                <h1 className="brand-title">LegalLens</h1>
+                                <p className="brand-subtitle">Professional Legal Analysis</p>
+                            </div>
                         </div>
                     </div>
 
+                    {/* Status */}
+                    <div className="status-section">
+                        {error ? (
+                            <AlertCircle className="status-icon error" />
+                        ) : (
+                            <CheckCircle className="status-icon success" />
+                        )}
+                        <h2 className="status-title">
+                            {error ? "Analysis Failed" : "Analysis Complete"}
+                        </h2>
+                    </div>
+
+                    {/* Content */}
                     {error ? (
-                        <div className="error-box">
-                            <AlertCircle className="error-icon" />
-                            <h3>Don't worry, these things happen!</h3>
-                            <p>{error}</p>
+                        <div className="error-container">
+                            <AlertCircle className="error-icon-large" />
+                            <h3 className="error-title">Analysis Error</h3>
+                            <p className="error-message">{error}</p>
                             <button onClick={resetUpload} className="btn-retry">
-                                <Upload /> Try Again
+                                <Upload />
+                                Try Again
                             </button>
                         </div>
-                    ) : results ? (
-                        <div className="results-content" ref={resultsRef}>
-                            <div className="success-message">
+                    ) : results && (
+                        <div className="results-container" ref={resultsRef}>
+                            {/* Success Message */}
+                            <div className="success-banner">
                                 <Sparkles />
-                                <span>Your document has been analyzed!</span>
+                                <span>Document analysis completed successfully</span>
                             </div>
 
-                            {/* Summary */}
-                            <div className="summary-box">
-                                <h3>
-                                    <FileText /> Document Summary
-                                </h3>
-                                <p>{results.summary}</p>
+                            {/* Summary Card */}
+                            <div className="card summary-card">
+                                <div className="card-header">
+                                    <FileText />
+                                    <h3>Executive Summary</h3>
+                                </div>
+                                <div className="card-content">
+                                    <p>{results.summary}</p>
+                                </div>
                             </div>
 
-                            {/* Key Points */}
-                            <div className="keypoints-box">
-                                <h3>
-                                    <Sparkles /> Key Highlights
-                                </h3>
-                                <ul>
-                                    {results.key_points.map((point, index) => (
-                                        <li key={index}>
-                                            <span className="point-number">{index + 1}</span>
-                                            <span>{point}</span>
-                                        </li>
+                            {/* Key Points Card */}
+                            <div className="card keypoints-card">
+                                <div className="card-header">
+                                    <TrendingUp />
+                                    <h3>Key Findings</h3>
+                                </div>
+                                <div className="card-content">
+                                    <ul className="keypoints-list">
+                                        {results.key_points.map((point, index) => (
+                                            <li key={index} className="keypoint-item">
+                                                <span className="point-number">{index + 1}</span>
+                                                <span className="point-text">{point}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            {/* References Card */}
+                            <div className="card references-card">
+                                <div className="card-header">
+                                    <Shield />
+                                    <h3>Compliance Notes</h3>
+                                </div>
+                                <div className="card-content">
+                                    {results.references.map((ref, index) => (
+                                        <p key={index} className="reference-item">{ref}</p>
                                     ))}
-                                </ul>
-                            </div>
-
-                            {/* References */}
-                            <div className="references-box">
-                                <h3>
-                                    <Shield /> Analysis Details
-                                </h3>
-                                {results.references.map((ref, index) => (
-                                    <p key={index}>{ref}</p>
-                                ))}
+                                </div>
                             </div>
                         </div>
-                    ) : null}
+                    )}
 
-                    <div className="actions">
-                        <button onClick={resetUpload} className="btn-another">
-                            <Upload /> Analyze Another Document <Sparkles />
+                    {/* Action Button */}
+                    <div className="actions-section">
+                        <button onClick={resetUpload} className="btn-primary">
+                            <Upload />
+                            Analyze Another Document
                         </button>
                     </div>
                 </div>
@@ -157,69 +191,105 @@ const HeroSection: React.FC = () => {
         );
     }
 
-    // Upload page
+    // Upload view
     return (
         <div className="hero-upload">
             <div className="hero-background" />
+
+            {/* Professional floating icons */}
             <div className="hero-icons-floating">
+                <Gavel className="icon-gavel" />
                 <Scale className="icon-scale" />
-                <FileText className="icon-file" />
-                <BookOpen className="icon-book" />
                 <Shield className="icon-shield" />
-                <Eye className="icon-eye" />
+                <Award className="icon-award" />
+                <Lock className="icon-lock" />
+                <Users className="icon-users" />
             </div>
 
             <div className="hero-container">
+                {/* Brand Header */}
                 <div className="brand-header">
-                    <Eye className="brand-logo" />
-                    <h1>LegalLens</h1>
-                    <p>AI Legal Assistant</p>
+                    <div className="brand-logo-wrapper">
+                        <div className="brand-logo">
+                            <Gavel />
+                        </div>
+                        <div className="brand-text">
+                            <h1 className="brand-name">LegalLens</h1>
+                            <p className="brand-tagline">AI Legal Assistant</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="welcome-message">
-                    <h2>
-                        Hey there! 👋 <br />
-                        <span>I’m your friendly legal translator</span>
+                {/* Welcome Message */}
+                <div className="welcome-section">
+                    <h2 className="welcome-title">
+                        Professional Legal Document Analysis
                     </h2>
-                    <p>Legal documents can be confusing. I’ll break them down into plain English for you.</p>
+                    <p className="welcome-description">
+                        Transform complex legal documents into clear, actionable insights
+                        with our AI-powered analysis platform.
+                    </p>
                 </div>
 
-                <input type="file" ref={fileInputRef} className="file-input" accept=".pdf,.docx,.txt" onChange={handleFileChange} />
+                {/* File Input */}
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="file-input"
+                    accept=".pdf,.docx,.txt"
+                    onChange={handleFileChange}
+                />
 
+                {/* Upload Section */}
                 <div className="upload-section">
-                    <button onClick={() => fileInputRef.current?.click()} disabled={isLoading} className="btn-upload">
+                    <button
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isLoading}
+                        className={`btn-upload ${isLoading ? 'loading' : ''}`}
+                    >
                         {isLoading ? <Loader2 className="spin" /> : <Upload />}
-                        {isLoading ? "Analyzing your document..." : "Upload Your Document"}
-                        {!isLoading && <Sparkles />}
+                        <span>{isLoading ? "Analyzing Document..." : "Upload Document"}</span>
+                        {!isLoading && <Award />}
                     </button>
 
+                    {/* Loading State */}
                     {isLoading && uploadedFileName && (
-                        <div className="loading-file">
-                            <Loader2 className="spin" />
-                            <p>Working on: {uploadedFileName}</p>
+                        <div className="loading-section">
+                            <div className="loading-info">
+                                <Clock />
+                                <span>Processing: {uploadedFileName}</span>
+                            </div>
                             <div className="progress-bar">
-                                <div className="progress" />
+                                <div className="progress-fill" />
                             </div>
                         </div>
                     )}
                 </div>
 
+                {/* How It Works */}
                 <div className="how-it-works">
-                    <h3>
-                        <Sparkles /> How I help you understand legal documents
+                    <h3 className="section-title">
+                        <Users />
+                        Professional Analysis Process
                     </h3>
-                    <div className="steps">
+                    <div className="steps-container">
                         <div className="step">
-                            <Upload />
-                            <p>Upload</p>
+                            <div className="step-icon">
+                                <Upload />
+                            </div>
+                            <span className="step-label">Secure Upload</span>
                         </div>
                         <div className="step">
-                            <Eye />
-                            <p>Analyze</p>
+                            <div className="step-icon">
+                                <Gavel />
+                            </div>
+                            <span className="step-label">AI Analysis</span>
                         </div>
                         <div className="step">
-                            <MessageCircle />
-                            <p>Explain</p>
+                            <div className="step-icon">
+                                <TrendingUp />
+                            </div>
+                            <span className="step-label">Insights Report</span>
                         </div>
                     </div>
                 </div>
